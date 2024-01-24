@@ -1,0 +1,13 @@
+.container {
+  height: 50px;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+}
+
+.images {
+  display: flex;
+  align-content: center;
+  gap: 10px;
+  cursor: pointer;
+}

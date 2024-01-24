@@ -1,5 +1,8 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
+import styles from "./page.module.css";
 
 const links = [
   {
@@ -35,15 +38,40 @@ const links = [
 ];
 
 const Navbar = () => {
+  const [activetab, setActiveTab] = useState("Home");
+
+  const clickLinks = (event) => {
+    setActiveTab(event.target.name);
+    document.querySelectorAll('[class*="links"]>a').forEach((e) => {
+      e.className = "";
+    });
+
+    if (event.target.className != "active") {
+      event.target.className += "active";
+    }
+
+    console.log(activetab);
+  };
+
   return (
-    <div>
-      <Link href="/">GenBlog</Link>
-      <div>
+    <div className={styles.container}>
+      <Link href="/" className={styles.logo}>
+        GenBlog
+      </Link>
+      <div className={styles.links}>
         {links.map((link) => (
-          <Link key={link.id} href={link.url}>
+          <Link
+            key={link.id}
+            href={link.url}
+            className={styles.link}
+            onClick={clickLinks}
+            name={link.title}
+          >
             {link.title}
           </Link>
         ))}
+
+        <button className={styles.logout}>Logout</button>
       </div>
     </div>
   );
