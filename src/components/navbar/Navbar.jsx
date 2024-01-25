@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
+import DarkLightMode from "../DarkLightMode/DarkLightMode";
 
 const links = [
   {
@@ -59,6 +60,7 @@ const Navbar = () => {
         GenBlog
       </Link>
       <div className={styles.links}>
+        <DarkLightMode />
         {links.map((link) => (
           <Link
             key={link.id}
