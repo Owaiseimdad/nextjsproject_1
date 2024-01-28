@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
 import DarkLightMode from "../DarkLightMode/DarkLightMode";
+import { signOut, useSession } from "next-auth/react";
 
 const links = [
   {
@@ -40,6 +41,7 @@ const links = [
 
 const Navbar = () => {
   const [activetab, setActiveTab] = useState("Home");
+  const session = useSession();
 
   const clickLinks = (event) => {
     setActiveTab(event.target.name);
@@ -72,8 +74,11 @@ const Navbar = () => {
             {link.title}
           </Link>
         ))}
-
-        <button className={styles.logout}>Logout</button>
+        {session.status === "authenticated" && (
+          <button className={styles.logout} onClick={signOut}>
+            Logout
+          </button>
+        )}
       </div>
     </div>
   );

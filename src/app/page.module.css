@@ -29,7 +29,7 @@
 
 .title {
   font-size: 65px;
-  background: linear-gradient(to bottom, rgb(92, 161, 92), white);
+  background: linear-gradient(to bottom, rgb(92, 161, 92), grey);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
