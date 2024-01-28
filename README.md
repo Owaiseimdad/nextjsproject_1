@@ -1,6 +1,6 @@
-## Getting Started
+## GenBlog is my first Next Project.
 
-First, run the development server:
+To implement the application first download the files and then execute teh command below
 
 ```bash
 npm run dev
