@@ -46,14 +46,24 @@ const Login = () => {
         <button className={styles.register}>Login</button>
       </form>
       {err && "Something Went Wrong"}
-      <button
-        onClick={() => {
-          signIn("google");
-        }}
-        className={styles.button}
-      >
-        Login with google
-      </button>
+      <div className={styles.signin}>
+        <button
+          onClick={() => {
+            router.push("/dashboard/register");
+          }}
+          className={styles.button}
+        >
+          Sign Up
+        </button>
+        <button
+          onClick={() => {
+            signIn("google");
+          }}
+          className={styles.button}
+        >
+          Login with google
+        </button>
+      </div>
     </div>
   );
 };

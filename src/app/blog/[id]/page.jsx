@@ -40,7 +40,7 @@ const PageBlog = async ({ params }) => {
                 height={40}
                 className={styles.profile}
               />
-              <div className={styles.userid}>Owaise Imdad</div>
+              <div className={styles.userid}>{data.username}</div>
             </div>
           </div>
           <div className={styles.imageContainer}>

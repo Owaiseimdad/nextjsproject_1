@@ -6,6 +6,8 @@ import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Button from "@/components/Button/Button";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
   // const [data, setData] = useState([]);
@@ -30,31 +32,123 @@ const Dashboard = () => {
   //   getData();
   // }, []);
   const session = useSession();
+  const router = useRouter();
+
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  const { data, mutate, error } = useSWR(
+    `/api/posts?username=${session?.data?.user?.name}`,
+    fetcher
+  );
+
+  const handlePost = async (id) => {
+    router.push(`/blog/${id}`);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await fetch(`/api/posts/${id}`, {
+        method: "DELETE",
+      });
+      mutate();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const title = e.target[0].value;
+    const desc = e.target[1].value;
+    const img = e.target[2].value;
+    const content = e.target[3].value;
+
+    try {
+      await fetch("/api/posts", {
+        method: "POST",
+        body: JSON.stringify({
+          title,
+          description: desc,
+          img,
+          content,
+          username: session.data.user.name,
+        }),
+      });
+      mutate();
+      e.target.reset();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div>
       {session.status === "unauthenticated" && (
-        <div className={styles.container}>
+        <div className={styles.logincontainer}>
           <h1>Login Page</h1>
-          <Button url={"/dashboard/register"} text={"Register"}></Button>
-          <Button url={"/dashboard/login"} text={"SignIn"}></Button>
+          <div className={styles.login}>
+            <Button url={"/dashboard/register"} text={"SingUp"}></Button>
+            <Button url={"/dashboard/login"} text={"SignIn"}></Button>
+          </div>
         </div>
       )}
 
       {session.status === "loading" && (
         <div className={styles.container}>
-          <h1>Loading...</h1>
+          <div className={styles.loader}></div>
         </div>
       )}
 
       {session.status === "authenticated" && (
         <div className={styles.container}>
-          <h1>Dashboard</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam,
-            expedita ipsam? At corrupti ducimus illo doloribus autem eveniet
-            cum. Quidem eos corporis voluptatibus fuga saepe vitae esse, amet
-            repellat ratione?
-          </p>
+          <div className={styles.posts}>
+            {data?.map((post) => (
+              <div className={styles.post} key={post._id}>
+                <div
+                  className={styles.imageContainer}
+                  onClick={() => handlePost(post._id)}
+                >
+                  <Image
+                    src={post.img}
+                    alt=""
+                    width={100}
+                    height={100}
+                    className={styles.image}
+                  />
+                </div>
+                <h2
+                  className={styles.postTitle}
+                  onClick={() => handlePost(post._id)}
+                >
+                  {post.title}
+                </h2>
+                <span
+                  className={styles.delete}
+                  onClick={() => {
+                    handleDelete(post._id);
+                  }}
+                >
+                  x
+                </span>
+              </div>
+            ))}
+          </div>
+          <form className={styles.new} onSubmit={handleSubmit}>
+            <h1>Add New Post</h1>
+            <input type="text" placeholder="Title" className={styles.input} />
+            <input
+              type="text"
+              placeholder="Description"
+              className={styles.input}
+            />
+            <input type="text" placeholder="Image" className={styles.input} />
+            <textarea
+              placeholder="Content"
+              className={styles.textArea}
+              cols="30"
+              rows="10"
+            ></textarea>
+            <button className={styles.button}>Send</button>
+          </form>
         </div>
       )}
     </div>
