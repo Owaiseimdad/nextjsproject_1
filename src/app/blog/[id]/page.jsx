@@ -4,7 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 async function getData(id) {
-  const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+  const res = await fetch(`http://localhost:3001/api/posts/${id}`, {
     next: { revalidate: 20 },
   });
 
@@ -13,6 +13,15 @@ async function getData(id) {
   }
 
   return res.json();
+}
+
+export async function generateMetadata({ params }) {
+  const post = await getData(params.id);
+  console.log(post);
+  return {
+    title: post.title,
+    description: post.description,
+  };
 }
 
 const PageBlog = async ({ params }) => {
@@ -36,7 +45,7 @@ const PageBlog = async ({ params }) => {
           </div>
           <div className={styles.imageContainer}>
             <Image
-              src="https://images.pexels.com/photos/60582/newton-s-cradle-balls-sphere-action-60582.jpeg?auto=compress&cs=tinysrgb&w=800"
+              src={data.img}
               width={500}
               height={300}
               className={styles.images}

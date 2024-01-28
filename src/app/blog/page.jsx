@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 async function getData() {
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts", {
+  const res = await fetch("http://localhost:3001/api/posts", {
     next: { revalidate: 20 },
   });
 
@@ -21,7 +21,11 @@ const Blog = async () => {
     <div>
       <div className={styles.items}>
         {data.map((item) => (
-          <Link href={`/blog/${item.id}`} className={styles.link} key={item.id}>
+          <Link
+            href={`/blog/${item._id}`}
+            className={styles.link}
+            key={item._id}
+          >
             <div className={styles.image}>
               <Image
                 src="https://images.pexels.com/photos/3685175/pexels-photo-3685175.jpeg?auto=compress&cs=tinysrgb&w=800"
